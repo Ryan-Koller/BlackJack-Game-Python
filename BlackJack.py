@@ -9,7 +9,7 @@ class Card:
     self.suit = suit # The suit of the card (e.g., Hearts, Spades)
     self.rank = rank # The rank of the card (e.g., 2, 3, 4, 10, J, Q, K. A)
 
-def__str__(self):
+def __str__(self):
   """
   Return a string representaion of the card (e.g., '10 of hearts')
   """
@@ -24,8 +24,8 @@ class Deck:
     suits = ['Hearts' , 'Diamonds' , 'Clubs' , 'Spades'] #Four suits in the deck
     ranks = ['2' , '3' , '4' , '5', '6' , '7' , '8' , '9' ,'10' , 'J' , 'Q' , 'K' , 'A'] #Ranks 2-10, J, Q, K, A
     # Create a list of Card objects for all combinations of suits and ranks
-    self.cards = [card(suit, rank) for suit in suits for rank in ranks]
-    random.shuffle(self,cards) # Shuffle the deck to randomize the card order
+    self.cards = [Card(suit, rank) for suit in suits for rank in ranks]
+    random.shuffle(self.cards) # Shuffle the deck to randomize the card order
 
 def deal_card(self):
   """
@@ -140,4 +140,3 @@ def play(self):
 if __name__ == '__main__':
   game = Blackjack() # Create a new BlackjackGame instance
   game.play() # Start the game 
-  
