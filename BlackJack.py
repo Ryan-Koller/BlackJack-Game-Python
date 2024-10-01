@@ -154,16 +154,29 @@ class BlackjackGame:
         """
         print("Welcome to Blackjack!")
         self.ask_player_name()  # Ask for the player's name
-        self.deal_initial_cards()  # Deal the initial two cards to each player
-        
-        # Show player's hand and dealer's first card
-        print(self.player.show_hand())  # Show the player's current hand and score
-        print(self.dealer.show_hand(reveal_first_card=True))  # Show only the dealer's first card
-        
-        self.player_turn()  # Handle the player's turn
-        if self.player.score <= 21:
-            self.dealer_turn()  # Handle the dealer's turn
-        self.determine_winner()  # Determine and print the winner
+        while True:
+            self.deck = Deck()  # Reset the deck at the beginning of each game
+            self.player.hand.clear()  # Clear player's hand
+            self.player.score = 0  # Reset player's score
+            self.dealer.hand.clear()  # Clear dealer's hand
+            self.dealer.score = 0  # Reset dealer's score
+            
+            self.deal_initial_cards()  # Deal the initial two cards to each player
+            
+            # Show player's hand and dealer's first card
+            print(self.player.show_hand())  # Show the player's current hand and score
+            print(self.dealer.show_hand(reveal_first_card=True))  # Show only the dealer's first card
+            
+            self.player_turn()  # Handle the player's turn
+            if self.player.score <= 21:
+                self.dealer_turn()  # Handle the dealer's turn
+            self.determine_winner()  # Determine and print the winner
+
+            # Ask if the player wants to play again
+            replay = input("Do you want to play again? (y/n): ").lower()
+            if replay != 'y':
+                print("Thanks for playing!")
+                break
 
 # Run the game
 if __name__ == '__main__':
