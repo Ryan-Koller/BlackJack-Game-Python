@@ -85,7 +85,7 @@ class BlackjackGame:
         Initialize the game with a deck, a player, and a dealer
         """
         self.deck = Deck()
-        self.player = Player("Player")
+        self.player = None  # Will be initialized later
         self.dealer = Player("Dealer")
 
     def deal_initial_cards(self):
@@ -100,27 +100,34 @@ class BlackjackGame:
         self.player.add_card(self.deck.deal_card())
         self.dealer.add_card(self.deck.deal_card())
 
+    def ask_player_name(self):
+        """
+        Ask the user for their name and create a Player object
+        """
+        name = input("Please enter your name: ")
+        self.player = Player(name)
+
     def player_turn(self):
         """
         Handle the player's turn where they can hit (take more cards) or stand
         """
         while True:
             print(self.player.show_hand())  # Show the player's current hand and score
-            choice = input("Do you want to hit or stand? (h/s): ").lower()
+            choice = input("Do you want to hit or stay? (h/s): ").lower()
             if choice == 'h':
                 self.player.add_card(self.deck.deal_card())  # Deal another card to the player
                 if self.player.score > 21:
                     print("Player busts!")
                     break
             elif choice == 's':
-                print("Player stands.")
+                print("Player stays.")
                 break
 
     def dealer_turn(self):
         """
         Handle the dealer's turn. The dealer must hit until their score is 17 or higher
         """
-        print(self.dealer.show_hand(reveal_first_card=True))  # Show the dealer's initial hand
+        print(self.dealer.show_hand(reveal_first_card=False))  # Show the dealer's full hand
         while self.dealer.score < 17:
             print("Dealer hits.")
             self.dealer.add_card(self.deck.deal_card())  # Deal a card to the dealer
@@ -133,9 +140,9 @@ class BlackjackGame:
         Determine the winner based on the player's and dealer's final scores
         """
         if self.player.score > 21:
-            print("Dealer wins!")
+            print(f"Dealer wins!")
         elif self.dealer.score > 21 or self.player.score > self.dealer.score:
-            print("Player wins!")
+            print(f"{self.player.name} wins!")
         elif self.player.score < self.dealer.score:
             print("Dealer wins!")
         else:
@@ -143,11 +150,16 @@ class BlackjackGame:
 
     def play(self):
         """
-        Main function to play the game: deal cards, take turns, and determine the winner
+        Main function to play the game: ask for player name, deal cards, take turns, and determine the winner
         """
         print("Welcome to Blackjack!")
+        self.ask_player_name()  # Ask for the player's name
         self.deal_initial_cards()  # Deal the initial two cards to each player
-        print(self.dealer.show_hand(reveal_first_card=True))  # Show dealer's first card and hide the second
+        
+        # Show player's hand and dealer's first card
+        print(self.player.show_hand())  # Show the player's current hand and score
+        print(self.dealer.show_hand(reveal_first_card=True))  # Show only the dealer's first card
+        
         self.player_turn()  # Handle the player's turn
         if self.player.score <= 21:
             self.dealer_turn()  # Handle the dealer's turn
