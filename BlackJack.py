@@ -36,7 +36,7 @@ class Deck:
 class Player:
     def __init__(self, name):
         """
-        Initialize a player with a name, empty hand, and score of 0
+        Initialize a player with a name, an empty hand, and a score of 0
         """
         self.name = name
         self.hand = []
@@ -62,19 +62,23 @@ class Player:
             self.score += 11
             self.ace_count += 1
 
-        # Handle Ace adjustment
-        while self.score > 21 and self.ace_count:
+        # Handle ace adjustment if score goes over 21
+        while self.score > 21 and self.ace_count > 0:
             self.score -= 10
             self.ace_count -= 1
 
-    def show_hand(self):
+    def show_hand(self, reveal_first_card=False):
         """
-        Return a string representation of the player's hand
+        Return a string representation of the player's hand.
+        Optionally hide all cards except the first one for the dealer.
         """
-        hand_str = ', '.join(str(card) for card in self.hand)
-        return f"{self.name}'s hand: {hand_str} (Score: {self.score})"
+        if reveal_first_card:
+            hand_str = f'{self.hand[0]} and [hidden card]'
+        else:
+            hand_str = ', '.join(str(card) for card in self.hand)
+        return f'{self.name}\'s hand: {hand_str} (Score: {self.score})'
 
-# BlackjackGame class contains the main logic for playing a Blackjack game
+# Game class contains the main logic for playing a Blackjack game
 class BlackjackGame:
     def __init__(self):
         """
@@ -86,23 +90,26 @@ class BlackjackGame:
 
     def deal_initial_cards(self):
         """
-        Deal two cards to the player and the dealer at the start
+        Deal two cards to the player and the dealer alternately
         """
-        for _ in range(2):
-            self.player.add_card(self.deck.deal_card())
-            self.dealer.add_card(self.deck.deal_card())
+        # Deal the first card to both the player and the dealer
+        self.player.add_card(self.deck.deal_card())
+        self.dealer.add_card(self.deck.deal_card())
+        
+        # Deal the second card to both the player and the dealer
+        self.player.add_card(self.deck.deal_card())
+        self.dealer.add_card(self.deck.deal_card())
 
     def player_turn(self):
         """
         Handle the player's turn where they can hit (take more cards) or stand
         """
         while True:
-            print(self.player.show_hand())
+            print(self.player.show_hand())  # Show the player's current hand and score
             choice = input("Do you want to hit or stand? (h/s): ").lower()
             if choice == 'h':
-                self.player.add_card(self.deck.deal_card())
+                self.player.add_card(self.deck.deal_card())  # Deal another card to the player
                 if self.player.score > 21:
-                    print(self.player.show_hand())
                     print("Player busts!")
                     break
             elif choice == 's':
@@ -113,13 +120,13 @@ class BlackjackGame:
         """
         Handle the dealer's turn. The dealer must hit until their score is 17 or higher
         """
-        print(self.dealer.show_hand())
+        print(self.dealer.show_hand(reveal_first_card=True))  # Show the dealer's initial hand
         while self.dealer.score < 17:
             print("Dealer hits.")
-            self.dealer.add_card(self.deck.deal_card())
-            print(self.dealer.show_hand())
-            if self.dealer.score > 21:
-                print("Dealer busts!")
+            self.dealer.add_card(self.deck.deal_card())  # Deal a card to the dealer
+            print(self.dealer.show_hand())  # Show the updated dealer's hand
+        if self.dealer.score > 21:
+            print("Dealer busts!")
 
     def determine_winner(self):
         """
@@ -139,13 +146,14 @@ class BlackjackGame:
         Main function to play the game: deal cards, take turns, and determine the winner
         """
         print("Welcome to Blackjack!")
-        self.deal_initial_cards()
-        self.player_turn()
+        self.deal_initial_cards()  # Deal the initial two cards to each player
+        print(self.dealer.show_hand(reveal_first_card=True))  # Show dealer's first card and hide the second
+        self.player_turn()  # Handle the player's turn
         if self.player.score <= 21:
-            self.dealer_turn()
-        self.determine_winner()
+            self.dealer_turn()  # Handle the dealer's turn
+        self.determine_winner()  # Determine and print the winner
 
 # Run the game
 if __name__ == '__main__':
-    game = BlackjackGame()
-    game.play()
+    game = BlackjackGame()  # Create a new BlackjackGame instance
+    game.play()  # Start the game
