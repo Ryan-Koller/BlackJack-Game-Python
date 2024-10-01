@@ -8,8 +8,8 @@ class Card:
     """
     self.suit = suit # The suit of the card (e.g., Hearts, Spades)
     self.rank = rank # The rank of the card (e.g., 2, 3, 4, 10, J, Q, K. A)
-
-def __str__(self):
+  
+  def __str__(self):
   """
   Return a string representaion of the card (e.g., '10 of hearts')
   """
@@ -25,7 +25,7 @@ class Deck:
     ranks = ['2' , '3' , '4' , '5', '6' , '7' , '8' , '9' ,'10' , 'J' , 'Q' , 'K' , 'A'] #Ranks 2-10, J, Q, K, A
     # Create a list of Card objects for all combinations of suits and ranks
     self.cards = [Card(suit, rank) for suit in suits for rank in ranks]
-    random.shuffle(self.cards) # Shuffle the deck to randomize the card order
+   random.shuffle(self.cards) # Shuffle the deck to randomize the card order
 
 def deal_card(self):
   """
@@ -57,7 +57,8 @@ def update_score(self, card):
   """
   if card.rank.isdigit(): #If the card is a number card (2-10)
     self.score += int(card.rank) # Add its face value to the score
-  elif card.rank in ['J', 'Q', 'K']: #Face cards are worth 10 points 
+  elif card.rank in ['J', 'Q', 'K']:
+      self.score += 10   #Face cards are worth 10 points 
   else: # If card is an Ace
       self.score += 11 # Intially count Ace as 11 points 
       self.ace_count += 1 # one less ace counted as 11 points
@@ -97,16 +98,16 @@ def player_tur(self):
     if self.player.score> 21: # If player's score exceeds 21, they bust
       print("Player bust!")
       break
-elif choice == 's': #If player chooses to stand 
-  print("Player stands.")
-break
+elif choice == 's':#If player chooses to stand 
+    print("Player stands.")
+    break
 
 def dealer_turn(self):
   """
   Handle the dealer's turn. The dealer must hit until their score is 17 or higher
   """
   print(self.dealer.show_hand()) #Show the dealer's initial hand
-while self.dealer.score < 17: #Dealer must hit if their score is below 17
+  while self.dealer.score < 17: #Dealer must hit if their score is below 17
   print("Dealer hits.")
   self.dealer.add_card(self.deck.deal_card()) #Deal a card to the dealer
 print(self.dealer.show_hand()) # Show the updated dealer's hand
@@ -131,12 +132,12 @@ def play(self):
       """
   print("Welcome to Blackjack!")
   self.deal_initial_cards() # Deal the initial two cards to each player
-  self.palyer_turn() #Handle the player's turn
+  self.player_turn() #Handle the player's turn
   if self.player.score <= 21: # Only proceed to dealer's turn if the player hasn't busted
     self.dealer_turn() # Handle the dealer's turn
   self.determine_winner() # Determine and print the winner
 
 # Run the game
 if __name__ == '__main__':
-  game = Blackjack() # Create a new BlackjackGame instance
+  game = BlackjackGame() # Create a new BlackjackGame instance
   game.play() # Start the game 
